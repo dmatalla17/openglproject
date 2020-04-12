@@ -1,0 +1,394 @@
+#include <iostream>
+#include <math.h>
+#include <string.h>
+#include <GL/glut.h>
+
+//Initializes 3D rendering
+void initRendering() {
+  //Makes 3D drawing work when something is in front of something else
+  glEnable(GL_DEPTH_TEST);
+ // Accept fragment if it closer to the camera than the former one
+  glDepthFunc(GL_LEQUAL); 
+  glEnable(GL_COLOR_MATERIAL);
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
+  glEnable(GL_NORMALIZE);
+
+  //glShadeModel(GL_FLAT);
+  glShadeModel(GL_SMOOTH);
+
+}
+
+float _angle = 90.0f;
+float _rotAngle = 0.0f;
+//Draws the 3D scene
+void drawScene() {
+glEnable(GL_TEXTURE_2D);
+glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+glMatrixMode(GL_MODELVIEW);
+glLoadIdentity();
+glTranslatef(0.0f, 0.0f, -14.0f);
+//Color (0.2, 0.2, 0.5)
+GLfloat ambientColor[] = {0.2f, 0.2f, 0.5f, 1.0f};
+glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
+GLfloat light0ambientColor[] = {0.0f, 0.0f, 0.0f, 1.0f};
+GLfloat light0diffuseColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
+GLfloat light0specularColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
+//Add positioned light
+GLfloat lightColor0[] = {0.5f, 0.5f, 0.5f, 1.0f};
+GLfloat lightPos0[] = {0.0f, -8.0f, 8.0f, 1.0f};
+glLightfv(GL_LIGHT0, GL_POSITION, lightPos0);
+glLightfv(GL_LIGHT0, GL_AMBIENT, light0ambientColor);
+glLightfv(GL_LIGHT0, GL_DIFFUSE, light0diffuseColor);
+glLightfv(GL_LIGHT0, GL_SPECULAR, light0specularColor);
+
+//Add directed light
+GLfloat lightColor1[] = {0.5f, 0.2f, 0.2f, 1.0f};
+GLfloat lightPos1[] = {-1.0f, 0.5f, 0.5f, 0.0f};
+glLightfv(GL_LIGHT0, GL_POSITION, lightPos1);
+glLightfv(GL_LIGHT0, GL_AMBIENT, light0ambientColor);
+glLightfv(GL_LIGHT0, GL_DIFFUSE, light0diffuseColor);
+glLightfv(GL_LIGHT0, GL_SPECULAR, light0specularColor);
+glRotatef(10, 1.0f, 0.0f, 0.0f);
+glRotatef(10, 1.0f, 0.0f, 0.0f);
+glRotatef(_angle,0.0f, 1.0f, 0.0f);
+//glColor3f(1.0f, 1.0f, 0.0f);
+glTexCoord2f(1.0f, 1.0f);
+glBegin(GL_QUADS);
+//Right
+glNormal3f(1.0f, 0.0f, 0.0f);
+glVertex3f(2.0f, -0.2f, -2.0f);
+glVertex3f(2.0f, 0.2f, -2.0f);
+glVertex3f(2.0f, 0.2f, 2.0f);
+glVertex3f(2.0f, -0.2f, 2.0f);
+
+//Front
+glNormal3f(0.0f, 0.0f, 1.0f);
+glVertex3f(-2.0f, -0.2f, 2.0f);
+glVertex3f(2.0f, -0.2f, 2.0f);
+glVertex3f(2.0f, 0.2f, 2.0f);
+glVertex3f(-2.0f, 0.2f, 2.0f);
+//Left
+glNormal3f(-1.0f, 0.0f, 0.0f);
+glVertex3f(-2.0f, -0.2f, -2.0f);
+glVertex3f(-2.0f, -0.2f, 2.0f);
+glVertex3f(-2.0f, 0.2f, 2.0f);
+glVertex3f(-2.0f, 0.2f, -2.0f);
+//Back
+glNormal3f(0.0f, 0.0f, -1.0f);
+glVertex3f(-2.0f, -0.2f, -2.0f);
+glVertex3f(-2.0f, 0.2f, -2.0f);
+glVertex3f(2.0f, 0.2f, -2.0f);
+glVertex3f(2.0f, -0.2f, -2.0f);
+//top
+glNormal3f(0.0f,1.0f,0.0f);
+glVertex3f(2.0f, 0.2f, 2.0f);
+glVertex3f(-2.0f, 0.2f, 2.0f);
+glVertex3f(-2.0f, 0.2f, -2.0f);
+glVertex3f(2.0f, 0.2f, -2.0f);
+//bottom
+glNormal3f(0.0f,-1.0f,0.0f);
+glVertex3f(2.0f, -0.2f, 2.0f);
+glVertex3f(-2.0f, -0.2f, 2.0f);
+glVertex3f(-2.0f, -0.2f, -2.0f);
+glVertex3f(2.0f, -0.2f, -2.0f);
+//chair front leg
+//front
+glNormal3f(0.0f, 0.0f, 1.0f);
+glVertex3f(2.0f,-0.2f,2.0f);
+glVertex3f(1.6f, -0.2f, 2.0f);
+glVertex3f(1.6f, -3.0f, 2.0f);
+glVertex3f(2.0f, -3.0f, 2.0f);
+//back
+glNormal3f(0.0f, 0.0f, -1.0f);
+glVertex3f(2.0f,-0.2f,1.6f);
+glVertex3f(1.6f, -0.2f, 1.6f);
+glVertex3f(1.6f, -3.0f, 1.6f);
+glVertex3f(2.0f, -3.0f, 1.6f);
+//right
+glNormal3f(1.0f, 0.0f, 0.0f);
+glVertex3f(2.0f,-0.2f,2.0f);
+glVertex3f(2.0f, -0.2f, 1.6f);
+glVertex3f(2.0f, -3.0f, 1.6f);
+glVertex3f(2.0f, -3.0f, 2.0f);
+//left
+glNormal3f(-1.0f, 0.0f, 0.0f);
+glVertex3f(1.6f,-0.2f,2.0f);
+glVertex3f(1.6f, -0.2f, 1.6f);
+glVertex3f(1.6f, -3.0f, 1.6f);
+glVertex3f(1.6f, -3.0f, 2.0f);
+//chair leg back
+//front
+glNormal3f(0.0f, 0.0f, -1.0f);
+glVertex3f(2.0f,-0.2f,-1.6f);
+glVertex3f(1.6f, -0.2f, -1.6f);
+glVertex3f(1.6f, -3.0f, -1.6f);
+glVertex3f(2.0f, -3.0f, -1.6f);
+//back
+glNormal3f(0.0f, 0.0f, -1.0f);
+glVertex3f(2.0f,-0.2f,-2.0f);
+glVertex3f(1.6f, -0.2f, -2.0f);
+glVertex3f(1.6f, -3.0f, -2.0f);
+glVertex3f(2.0f, -3.0f, -2.0f);
+//right
+glNormal3f(1.0f, 0.0f, 0.0f);
+glVertex3f(2.0f,-0.2f,-2.0f);
+glVertex3f(2.0f, -0.2f, -1.6f);
+glVertex3f(2.0f, -3.0f, -1.6f);
+glVertex3f(2.0f, -3.0f, -2.0f);
+//left
+glNormal3f(1.0f, 0.0f, 0.0f);
+glVertex3f(1.6f,-0.2f,-2.0f);
+glVertex3f(1.6f, -0.2f, -1.6f);
+glVertex3f(1.6f, -3.0f, -1.6f);
+glVertex3f(1.6f, -3.0f, -2.0f);
+//leg left front
+glNormal3f(0.0f, 0.0f, 1.0f);
+glVertex3f(-2.0f,-0.2f,2.0f);
+glVertex3f(-1.6f, -0.2f, 2.0f);
+glVertex3f(-1.6f, -3.0f, 2.0f);
+glVertex3f(-2.0f, -3.0f, 2.0f);
+//back
+glNormal3f(0.0f, 0.0f, -1.0f);
+glVertex3f(-2.0f,-0.2f,1.6f);
+glVertex3f(-1.6f, -0.2f, 1.6f);
+glVertex3f(-1.6f, -3.0f, 1.6f);
+glVertex3f(-2.0f, -3.0f, 1.6f);
+//right
+glNormal3f(1.0f, 0.0f, 0.0f);
+glVertex3f(-2.0f,-0.2f,2.0f);
+glVertex3f(-2.0f, -0.2f, 1.6f);
+glVertex3f(-2.0f, -3.0f, 1.6f);
+glVertex3f(-2.0f, -3.0f, 2.0f);
+//left
+glNormal3f(-1.0f, 0.0f, 0.0f);
+glVertex3f(-1.6f,-0.2f,2.0f);
+glVertex3f(-1.6f, -0.2f, 1.6f);
+glVertex3f(-1.6f, -3.0f, 1.6f);
+glVertex3f(-1.6f, -3.0f, 2.0f);
+//chair left leg back front
+//front
+glNormal3f(0.0f, 0.0f, -1.0f);
+glVertex3f(-2.0f,-0.2f,-1.6f);
+glVertex3f(-1.6f, -0.2f, -1.6f);
+glVertex3f(-1.6f, -3.0f, -1.6f);
+glVertex3f(-2.0f, -3.0f, -1.6f);
+//back
+glNormal3f(0.0f, 0.0f, -1.0f);
+glVertex3f(-2.0f,-0.2f,-2.0f);
+glVertex3f(-1.6f, -0.2f, -2.0f);
+glVertex3f(-1.6f, -3.0f, -2.0f);
+glVertex3f(-2.0f, -3.0f, -2.0f);
+//right
+glNormal3f(1.0f, 0.0f, 0.0f);
+glVertex3f(-2.0f,-0.2f,-2.0f);
+glVertex3f(-2.0f, -0.2f, -1.6f);
+glVertex3f(-2.0f, -3.0f, -1.6f);
+glVertex3f(-2.0f, -3.0f, -2.0f);
+//left
+glNormal3f(-1.0f, 0.0f, 0.0f);
+glVertex3f(-1.6f,-0.2f,-2.0f);
+glVertex3f(-1.6f, -0.2f, -1.6f);
+glVertex3f(-1.6f, -3.0f, -1.6f);
+glVertex3f(-1.6f, -3.0f, -2.0f);
+//chair back
+//front
+
+glNormal3f(0.0f, 0.0f, -1.0f);
+glVertex3f(-2.0f,-0.2f,-1.6f);
+glVertex3f(-1.6f, -0.2f, -1.6f);
+glVertex3f(-1.6f, 4.5f, -1.6f);
+glVertex3f(-2.0f, 4.5f, -1.6f);
+//back
+glNormal3f(0.0f, 0.0f, -1.0f);
+glVertex3f(-2.0f,-0.2f,-2.0f);
+glVertex3f(-1.6f, -0.2f, -2.0f);
+glVertex3f(-1.6f, 4.5f, -2.0f);
+glVertex3f(-2.0f, 4.5f, -2.0f);
+//right
+glNormal3f(1.0f, 0.0f, 0.0f);
+glVertex3f(-2.0f,-0.2f,-2.0f);
+glVertex3f(-2.0f, -0.2f, -1.6f);
+glVertex3f(-2.0f, 4.5f, -1.6f);
+glVertex3f(-2.0f, 4.5f, -2.0f);
+//left
+glNormal3f(-1.0f, 0.0f, 0.0f);
+glVertex3f(-1.6f,-0.2f,-2.0f);
+glVertex3f(-1.6f, -0.2f, -1.6f);
+glVertex3f(-1.6f, 4.5f, -1.6f);
+glVertex3f(-1.6f, 4.5f, -2.0f);
+
+//back chair
+//front
+glNormal3f(0.0f, 0.0f, -1.0f);
+glVertex3f(2.0f,-0.2f,-1.6f);
+glVertex3f(1.6f, -0.2f, -1.6f);
+glVertex3f(1.6f, 4.5f, -1.6f);
+glVertex3f(2.0f, 4.5f, -1.6f);
+//back
+glNormal3f(0.0f, 0.0f, -1.0f);
+glVertex3f(2.0f,-0.2f,-2.0f);
+glVertex3f(1.6f, -0.2f, -2.0f);
+glVertex3f(1.6f, 4.5f, -2.0f);
+glVertex3f(2.0f, 4.5f, -2.0f);
+//right
+glNormal3f(1.0f, 0.0f, 0.0f);
+glVertex3f(2.0f,-0.2f,-2.0f);
+glVertex3f(2.0f, -0.2f, -1.6f);
+glVertex3f(2.0f, 4.5f, -1.6f);
+glVertex3f(2.0f, 4.5f, -2.0f);
+//left
+glNormal3f(1.0f, 0.0f, 0.0f);
+glVertex3f(1.6f,-0.2f,-2.0f);
+glVertex3f(1.6f, -0.2f, -1.6f);
+glVertex3f(1.6f, 4.5f, -1.6f);
+glVertex3f(1.6f, 4.5f, -2.0f);
+
+//back chair up
+
+//front
+
+glVertex3f(-2.0f, 4.0f, -2.0f);
+glVertex3f(2.0f, 4.0f, -2.0f);
+glVertex3f(2.0f, 4.5f, -2.0f);
+glVertex3f(-2.0f, 4.5f, -2.0f);
+//back
+
+glVertex3f(-2.0f, 4.0f, -2.0f);
+glVertex3f(2.0f, 4.0f, -2.0f);
+glVertex3f(2.0f, 4.f, -2.0f);
+glVertex3f(-2.0f, 4.5f, -2.0f);
+
+glVertex3f(-2.0f, 4.0f, -2.0f);
+glVertex3f(-2.0f, 4.5f, -2.0f);
+glVertex3f(-2.0f, 4.5f, -1.8f);
+glVertex3f(-2.0f, 4.0f, -1.8f);
+
+glVertex3f(2.0f, 4.0f, -2.0f);
+glVertex3f(2.0f, 4.5f, -2.0f);
+glVertex3f(2.0f, 4.5f, -1.8f);
+glVertex3f(2.0f, 4.0f, -2.0f);
+
+glVertex3f(-2.0f, 4.5f, -2.0f);
+glVertex3f(-2.0f, 4.5f, -2.0f);
+glVertex3f(2.0f, 4.5f, -2.0f);
+glVertex3f(2.0f, 4.5f, -2.0f);
+//back chair down
+//front
+
+glVertex3f(-2.0f, 3.0f, -2.0f);
+glVertex3f(2.0f, 3.0f, -2.0f);
+glVertex3f(2.0f, 3.5f, -2.0f);
+glVertex3f(-2.0f, 3.5f, -2.0f);
+//back
+
+glVertex3f(-1.8f, 3.0f, -2.0f);
+glVertex3f(1.8f, 3.0f, -2.0f);
+glVertex3f(1.8f, 3.0f, -2.0f);
+glVertex3f(-1.8f, 3.5f, -2.0f);
+
+glVertex3f(-1.8f, 3.0f, -2.0f);
+glVertex3f(-1.8f, 3.5f, -2.0f);
+glVertex3f(-1.8f, 3.5f, -1.8f);
+glVertex3f(-1.8f, 3.0f, -1.8f);
+
+glVertex3f(1.8f, 3.0f, -2.0f);
+glVertex3f(1.8f, 3.5f, -2.0f);
+glVertex3f(1.8f, 3.5f, -1.8f);
+glVertex3f(1.8f, 3.0f, -1.8f);
+
+glVertex3f(-1.8f, 3.5f, -2.0f);
+glVertex3f(-1.8f, 3.5f, -1.8f);
+glVertex3f(1.8f, 3.5f, -1.8f);
+glVertex3f(1.8f, 3.5f, -2.0f);
+glEnd();
+glutSwapBuffers();
+glDisable(GL_TEXTURE_2D);
+}
+
+
+void handleKeypress(unsigned char key, //The key that was pressed
+		    int x, int y) {    //The current mouse coordinates
+  switch (key) {
+  case 27: //Escape key
+    exit(0); //Exit the program
+    break;
+  case 'a':
+    _angle+=5.0f;
+    glutPostRedisplay();
+    break;
+  case 's':
+    _angle-=5.0f;
+    glutPostRedisplay();
+    glEnable(GL_LIGHT0);
+    glutPostRedisplay();
+    break;
+
+  }
+}
+
+//Called when the window is resized
+void handleResize(int w, int h) {
+  //if (h == 0) h = 1;                // To prevent divide by 0
+   GLfloat aspect = (GLfloat)w / (GLfloat)h;
+  //Tell OpenGL how to convert from coordinates to pixel values
+  glViewport(0, 0, w, h);
+	
+  glMatrixMode(GL_PROJECTION); //Switch to setting the camera perspective
+
+  //Set the camera perspective
+  glLoadIdentity(); //Reset the camera
+  int ortho = 0;
+  if (ortho) {
+        glOrtho(-4.5 * aspect, 4.5 *aspect, -4.5, 4.5f, -0.1f, 200);
+        glutPostRedisplay();
+    } else {
+       gluPerspective(45.0, (double)w / (double)h, 1.0, 200.0); 
+       glutPostRedisplay();
+    }
+    
+     // Set up orthographic projection view [NEW]
+   if (w >= h) {
+
+   } else {
+
+   }            
+}
+
+void update(int value) {
+_rotAngle += 3.0f;
+
+  if (_rotAngle >= 360) {
+    _rotAngle -= 360;
+  }
+
+   _angle += 0.5f;
+
+   if (_angle >= 360) {
+     _angle -= 360;
+   }
+glutPostRedisplay();
+glutTimerFunc(25, update, 0);
+}
+
+
+
+int main(int argc, char** argv) {
+//Initialize GLUT
+glutInit(&argc, argv);
+glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+glutInitWindowSize(600, 600);
+//Create the window
+glutInitWindowPosition(10, 10);
+//glutCreateWindow(argv[0]);
+glutCreateWindow("3D Chair OpenGL - Dimitri Atalla");
+//LoadTexture("wood.bmp");
+initRendering();
+//Set handler functions
+glutDisplayFunc(drawScene);
+glutKeyboardFunc(handleKeypress);
+glutReshapeFunc(handleResize);
+//glutTimerFunc(25, update, 0);
+glutMainLoop();
+return 0;
+}
